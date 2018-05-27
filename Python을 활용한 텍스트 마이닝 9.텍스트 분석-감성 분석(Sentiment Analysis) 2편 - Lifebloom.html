@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<!-- saved from url=(0236)http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/ -->
+<html lang="ko-KR" prefix="og: http://ogp.me/ns#"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="http://www.lifebloom.biz/xmlrpc.php">
+	<title>Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom</title>
+
+<!-- This site is optimized with the Yoast SEO plugin v7.2 - https://yoast.com/wordpress/plugins/seo/ -->
+<!-- Admin only notice: this page doesn&#039;t show a meta description because it doesn&#039;t have one, either write it for this page specifically or go into the SEO -&gt; Search Appearance menu and set up a template. -->
+<link rel="canonical" href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom">
+<meta property="og:description" content="저번 포스팅에서는 Sentiment Analysis(SA)의 방법 중 하나인 knowledge based technique에 대해서 살펴봤습니다. 이번에는 Statistical methods을 통해서 감성 분석을 해보겠습니다.   Naive Bayes classifier 나이브 베이즈 분류기를 다루기 전에 먼저 TF-IDF(Term Frequency – Inverse Document Frequency)와 같은 벡터 공간 모형에 대해서 알아보겠습니다.">
+<meta property="og:url" content="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/">
+<meta property="og:site_name" content="Lifebloom">
+<meta property="article:section" content="Text Mining">
+<meta property="article:published_time" content="2017-08-18T15:58:10+00:00">
+<meta property="article:modified_time" content="2017-08-27T15:24:49+00:00">
+<meta property="og:updated_time" content="2017-08-27T15:24:49+00:00">
+<meta property="og:image" content="http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처.png">
+<meta property="og:image" content="http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처-1.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="저번 포스팅에서는 Sentiment Analysis(SA)의 방법 중 하나인 knowledge based technique에 대해서 살펴봤습니다. 이번에는 Statistical methods을 통해서 감성 분석을 해보겠습니다.   Naive Bayes classifier 나이브 베이즈 분류기를 다루기 전에 먼저 TF-IDF(Term Frequency – Inverse Document Frequency)와 같은 벡터 공간 모형에 대해서 알아보겠습니다.">
+<meta name="twitter:title" content="Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom">
+<meta name="twitter:image" content="http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처.png">
+<!-- / Yoast SEO plugin. -->
+
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Lifebloom » 피드" href="http://www.lifebloom.biz/feed/">
+<link rel="alternate" type="application/rss+xml" title="Lifebloom » 댓글 피드" href="http://www.lifebloom.biz/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Lifebloom » Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 댓글 피드" href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/feed/">
+		<script type="text/javascript">window._wpemojiSettings={"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.lifebloom.biz\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.5"}};!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56692,8205,9792,65039],[55357,56692,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);</script><script src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/wp-emoji-release.min.js.다운로드" type="text/javascript" defer=""></script>
+		<style type="text/css">img.wp-smiley,img.emoji{display:inline!important;border:none!important;box-shadow:none!important;height:1em!important;width:1em!important;margin:0 .07em!important;vertical-align:-.1em!important;background:none!important;padding:0!important}</style>
+<link rel="stylesheet" id="dashicons-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/dashicons.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/admin-bar.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="crayon-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/crayon.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="crayon-theme-classic-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/classic.css" type="text/css" media="all">
+<link rel="stylesheet" id="crayon-font-monaco-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/monaco.css" type="text/css" media="all">
+<link rel="stylesheet" id="ct_public_admin_css-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/cleantalk-public-admin.css" type="text/css" media="all">
+<link rel="stylesheet" id="yoast-seo-adminbar-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/adminbar-720.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="spacious_style-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="spacious-genericons-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/genericons.css" type="text/css" media="all">
+<link rel="stylesheet" id="spacious-font-awesome-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/font-awesome.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="google_fonts-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="tablepress-default-css" href="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/default.min.css" type="text/css" media="all">
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/jquery.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/jquery-migrate.min.js.다운로드"></script>
+<script type="text/javascript">//<![CDATA[
+var CrayonSyntaxSettings={"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"http:\/\/www.lifebloom.biz\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};var CrayonSyntaxStrings={"copy":"%s\ub85c \ubcf5\uc0ac, %s\ub85c \ubd99\uc5ec\ub123\uae30","minimize":"Click To Expand Code"};
+//]]></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/crayon.min.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/spacious-custom.js.다운로드"></script>
+<!--[if lte IE 8]>
+<script type='text/javascript' src='http://www.lifebloom.biz/wp-content/themes/spacious/js/html5shiv.min.js?ver=4.9.5'></script>
+<![endif]-->
+<link rel="https://api.w.org/" href="http://www.lifebloom.biz/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.lifebloom.biz/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.lifebloom.biz/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 4.9.5">
+<link rel="shortlink" href="http://www.lifebloom.biz/?p=314">
+<link rel="alternate" type="application/json+oembed" href="http://www.lifebloom.biz/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://www.lifebloom.biz/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F&amp;format=xml">
+	<style type="text/css">#site-title a{color:#5cd606}#site-description{color:#5cd606}</style>
+	<style type="text/css" id="custom-background-css">body.custom-background{background-color:#c4c4c4;background-image:url(http://www.lifebloom.biz/wp-content/uploads/2017/06/DSC09756.jpg);background-position:left top;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}</style>
+<style type="text/css" media="print">#wpadminbar{display:none}</style>
+<style type="text/css" media="screen">html{margin-top:32px!important}* html body{margin-top:32px!important}@media screen and (max-width:782px ){html{margin-top:46px!important}* html body{margin-top:46px!important}}</style>
+<link rel="icon" href="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-32x32.png" sizes="32x32">
+<link rel="icon" href="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-180x180.png">
+<meta name="msapplication-TileImage" content="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-270x270.png">
+<style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style></head>
+
+<body class="post-template-default single single-post postid-314 single-format-standard logged-in admin-bar custom-background  customize-support"><div id="MathJax_Message" style="display: none;"></div>
+<div id="page" class="hfeed site">
+	
+	
+	<header id="masthead" class="site-header clearfix ">
+
+		
+		<div id="header-text-nav-container">
+						<div class="inner-wrap">
+			
+				<div id="header-text-nav-wrap" class="clearfix">
+					<div id="header-left-section">
+						
+							<div id="header-text" class="">
+																	<h3 id="site-title">
+										<a href="http://www.lifebloom.biz/" title="Lifebloom" rel="home">Lifebloom</a>
+									</h3>
+																<p id="site-description">About R, Python, SAS, Machine Learning, Data Mining and miscellaneous things</p>
+								<!-- #site-description -->
+							</div><!-- #header-text -->
+
+												</div><!-- #header-left-section -->
+					<div id="header-right-section">
+						
+							<nav id="site-navigation" class="main-navigation" role="navigation">
+								<h3 class="menu-toggle">메뉴</h3>
+								<div class="menu-primary-container"><ul id="menu-main" class="menu nav-menu"><li id="menu-item-37" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-37"><a href="http://www.lifebloom.biz/">홈</a></li>
+<li id="menu-item-83" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83"><a href="http://www.lifebloom.biz/profile/">Profile</a></li>
+<li id="menu-item-85" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85"><a href="http://www.lifebloom.biz/sample-page/">Contact</a></li>
+<li id="menu-item-90" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-90"><a href="http://www.lifebloom.biz/category/r/">R</a>
+<ul class="sub-menu">
+	<li id="menu-item-376" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-376"><a href="http://www.lifebloom.biz/category/r/ml/">machine learning</a></li>
+	<li id="menu-item-286" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-286"><a href="http://www.lifebloom.biz/category/r/pb/">Packages &amp; Base</a></li>
+	<li id="menu-item-287" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-287"><a href="http://www.lifebloom.biz/category/r/recom/">Recommendation System</a></li>
+	<li id="menu-item-364" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-364"><a href="http://www.lifebloom.biz/category/r/2017-weather-contest/">2017 Weather Contest</a></li>
+</ul>
+</li>
+<li id="menu-item-91" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-91"><a href="http://www.lifebloom.biz/category/py/">Python</a>
+<ul class="sub-menu">
+	<li id="menu-item-501" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-501"><a href="http://www.lifebloom.biz/category/py/wrg/">coding with python</a></li>
+	<li id="menu-item-93" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-93"><a href="http://www.lifebloom.biz/category/py/ins-py/">installation</a></li>
+	<li id="menu-item-92" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-92"><a href="http://www.lifebloom.biz/category/py/tm/">Text Mining</a></li>
+	<li id="menu-item-335" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-335"><a href="http://www.lifebloom.biz/category/py/nn/">Neural Network</a></li>
+</ul>
+</li>
+<li id="menu-item-225" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-225"><a href="http://www.lifebloom.biz/category/visualization/">Visualization</a></li>
+<li id="menu-item-168" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-168"><a href="http://www.lifebloom.biz/category/misc/">misc</a></li>
+</ul></div>							</nav>
+
+												</div><!-- #header-right-section -->
+
+				</div><!-- #header-text-nav-wrap -->
+								</div><!-- .inner-wrap -->
+						</div><!-- #header-text-nav-container -->
+
+		
+						<div class="header-post-title-container clearfix">
+					<div class="inner-wrap">
+						<div class="post-title-wrapper">
+																								<h1 class="header-post-title-class">Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편</h1>
+																						</div>
+											</div>
+				</div>
+					</header>
+			<div id="main" class="clearfix">
+		<div class="inner-wrap">
+
+	
+	<div id="primary">
+		<div id="content" class="clearfix">
+			
+				
+<article id="post-314" class="post-314 post type-post status-publish format-standard hentry category-tm">
+		<div class="entry-content clearfix">
+		<p>저번 포스팅에서는&nbsp;Sentiment Analysis(SA)의 방법 중 하나인 knowledge based technique에 대해서 살펴봤습니다.</p>
+<p>이번에는 Statistical methods을 통해서 감성 분석을 해보겠습니다.</p>
+<p>&nbsp;</p>
+<ol>
+<li>Naive Bayes classifier</li>
+</ol>
+<p>나이브 베이즈 분류기를 다루기 전에 먼저 TF-IDF(Term Frequency – Inverse Document Frequency)와 같은 벡터 공간 모형에 대해서 알아보겠습니다.</p>
+<p><img class="aligncenter size-full wp-image-315" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/캡처.png" alt="" width="363" height="110" srcset="http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처.png 363w, http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처-300x91.png 300w" sizes="(max-width: 363px) 100vw, 363px"></p>
+<p>TF_IDF는 이와 같은 형태로 문장에서 해당하는 단어의 등장 여부에 따라서 다음과 같이 나타냅니다. 이 때 단어의 등장여부를 T/F로 보는 boolean model, 단어의 등장 횟수로 보는 frequency model 둘다 가능합니다.</p>
+<p>여기서 자주 등장하는 단어를 통해 하나하나의 dimension을 생성하는 것이 벡터 공간 모형의 기초적인 형태입니다. 그리고 이러한 feature에 기계학습 알고리즘을 통해서 train을 진행합니다.</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d4d292476918" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">import os
+files=os.listdir('[저장된 폴더 주소]/aclImdb/train/pos')
+
+from nltk.corpus import stopwords
+stopWords=set(stopwords.words('english'))
+from nltk.corpus import sentiwordnet as swn
+
+words = []
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos/{}'.format(file),'r',encoding = 'utf-8') as f:
+        review = nltk.word_tokenize(f.read())
+        for token in review:
+            if token not in stopWords:
+                words.append(token)
+print(len(words))</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-2">2</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-4">4</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-6">6</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-8">8</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-10">10</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-12">12</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d4d292476918-14">14</div><div class="crayon-num" data-line="crayon-5af82e92e2d4d292476918-15">15</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-1"><span class="crayon-e">import </span><span class="crayon-e">os</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-2"><span class="crayon-v">files</span><span class="crayon-o">=</span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'[저장된 폴더 주소]/aclImdb/train/pos'</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-3">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-4"><span class="crayon-e">from </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">corpus </span><span class="crayon-e">import </span><span class="crayon-e">stopwords</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-5"><span class="crayon-v">stopWords</span><span class="crayon-o">=</span><span class="crayon-e">set</span><span class="crayon-sy">(</span><span class="crayon-v">stopwords</span><span class="crayon-sy">.</span><span class="crayon-e">words</span><span class="crayon-sy">(</span><span class="crayon-s">'english'</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-6"><span class="crayon-e">from </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">corpus </span><span class="crayon-e">import </span><span class="crayon-e">sentiwordnet </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-e">swn</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-7">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-8"><span class="crayon-v">words</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-sy">[</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-9"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-10"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-11"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-12"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">token </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">review</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-13"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-e">token </span><span class="crayon-st">not</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">stopWords</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d4d292476918-14"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">words</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-v">token</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d4d292476918-15"><span class="crayon-e">print</span><span class="crayon-sy">(</span><span class="crayon-e">len</span><span class="crayon-sy">(</span><span class="crayon-v">words</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0006 seconds] -->
+<p>먼저 긍정 학습 데이터에서의 모든 토큰을 words라는 리스트에 저장합니다. &nbsp;이때 &nbsp;Stopwords도 함께 제거해줍니다</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d54289246365" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">files=os.listdir('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg')
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg/{}'.format(file),'r',encoding = 'utf-8') as f:
+        review = nltk.word_tokenize(f.read())
+        for token in review:
+            if token not in stopWords:
+                words.append(token)
+print(len(words))</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d54289246365-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d54289246365-2">2</div><div class="crayon-num" data-line="crayon-5af82e92e2d54289246365-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d54289246365-4">4</div><div class="crayon-num" data-line="crayon-5af82e92e2d54289246365-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d54289246365-6">6</div><div class="crayon-num" data-line="crayon-5af82e92e2d54289246365-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d54289246365-8">8</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d54289246365-1"><span class="crayon-v">files</span><span class="crayon-o">=</span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg'</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d54289246365-2"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d54289246365-3"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d54289246365-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d54289246365-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">token </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">review</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d54289246365-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-e">token </span><span class="crayon-st">not</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">stopWords</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d54289246365-7"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">words</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-v">token</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d54289246365-8"><span class="crayon-e">print</span><span class="crayon-sy">(</span><span class="crayon-e">len</span><span class="crayon-sy">(</span><span class="crayon-v">words</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0004 seconds] -->
+<p>같은 방식으로 부정 학습 데이터에서 Stopwords 를 제거하고 words리스트에 붙여 넣습니다.</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d57497367221" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">words=nltk.FreqDist(words)
+word_features=list(words.keys())[:3000]</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d57497367221-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d57497367221-2">2</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d57497367221-1"><span class="crayon-v">words</span><span class="crayon-o">=</span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">FreqDist</span><span class="crayon-sy">(</span><span class="crayon-v">words</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d57497367221-2"><span class="crayon-v">word_features</span><span class="crayon-o">=</span><span class="crayon-e">list</span><span class="crayon-sy">(</span><span class="crayon-v">words</span><span class="crayon-sy">.</span><span class="crayon-e">keys</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">3000</span><span class="crayon-sy">]</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>words리스트를 이용해서 3000 dimension의 word feature를 생성합니다.</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d59838571258" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">def find_features(doc):
+    words = set(doc)
+    features = {}
+    for w in word_features:
+        features[w] = (w in words)
+    return features</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d59838571258-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d59838571258-2">2</div><div class="crayon-num" data-line="crayon-5af82e92e2d59838571258-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d59838571258-4">4</div><div class="crayon-num" data-line="crayon-5af82e92e2d59838571258-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d59838571258-6">6</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d59838571258-1"><span class="crayon-e">def </span><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">doc</span><span class="crayon-sy">)</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d59838571258-2"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">words</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-e">set</span><span class="crayon-sy">(</span><span class="crayon-v">doc</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d59838571258-3"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">features</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-sy">{</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d59838571258-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-i">w</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">word_features</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d59838571258-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">features</span><span class="crayon-sy">[</span><span class="crayon-v">w</span><span class="crayon-sy">]</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-i">w</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">words</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d59838571258-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">return</span><span class="crayon-h"> </span><span class="crayon-v">features</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p>word feature를 통해서 분석할 데이터의 feature를 생성하는 함수도 만들어 줍니다.</p>
+<p>이제 첫번째 리뷰 데이터의 문장들을 이용해서 feature를 생성해보겠습니다.</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d5b067481876" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg/{}'.format(files[0]),'r',encoding='utf-8') as f:
+    review = nltk.word_tokenize(f.read())
+find_features(review)</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d5b067481876-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d5b067481876-2">2</div><div class="crayon-num" data-line="crayon-5af82e92e2d5b067481876-3">3</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d5b067481876-1"><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">files</span><span class="crayon-sy">[</span><span class="crayon-cn">0</span><span class="crayon-sy">]</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-o">=</span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d5b067481876-2"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d5b067481876-3"><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">review</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p><img class="aligncenter size-full wp-image-320" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/캡처-1.png" alt="" width="1065" height="339" srcset="http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처-1.png 1065w, http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처-1-300x95.png 300w, http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처-1-768x244.png 768w, http://www.lifebloom.biz/wp-content/uploads/2017/08/캡처-1-1024x326.png 1024w" sizes="(max-width: 1065px) 100vw, 1065px"></p>
+<p>&nbsp;</p>
+<p>첫 번째 리뷰 데이터의 feature생성 결과입니다.</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d5e006023540" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">feature_sets =[]
+files = os.listdir('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos')[:1000]
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos/{}'.format(file),'r',encoding='utf-8') as f:
+            review = nltk.word_tokenize(f.read())
+            feature_sets.append((find_features(review),'pos'))</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d5e006023540-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d5e006023540-2">2</div><div class="crayon-num" data-line="crayon-5af82e92e2d5e006023540-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d5e006023540-4">4</div><div class="crayon-num" data-line="crayon-5af82e92e2d5e006023540-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d5e006023540-6">6</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d5e006023540-1"><span class="crayon-v">feature_sets</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-sy">[</span><span class="crayon-sy">]</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d5e006023540-2"><span class="crayon-v">files</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos'</span><span class="crayon-sy">)</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">1000</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-5af82e92e2d5e006023540-3"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d5e006023540-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-o">=</span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d5e006023540-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d5e006023540-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">feature_sets</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-sy">(</span><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">review</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'pos'</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p>같은 방법으로 1000개의 리뷰 데이터에 대해 feature set을 생성해서 리스트에 저장합니다.</p>
+<p>&nbsp;</p>
+<p>본격적으로 나이브 베이즈 분류기(Naive Bayes Classifier)를 통해 감성분석을 시작하겠습니다. 분류기는 nltk에 내장되어 있기 때문에 따로 설치할 것은 없습니다.</p>
+<p>가장 먼저 2000개의 영화 리뷰를 긍/부정으로 분류해보겠습니다.</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d60049604998" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">feature_sets =[]
+files = os.listdir('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos')[:1000]
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos/{}'.format(file),'r',encoding='utf-8') as f:
+            review = nltk.word_tokenize(f.read())
+            feature_sets.append((find_features(review),'pos'))
+            
+files = os.listdir('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg')[:1000]
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg/{}'.format(file),'r',encoding='utf-8') as f:
+            review = nltk.word_tokenize(f.read())
+            feature_sets.append((find_features(review),'neg'))
+            
+files = os.listdir('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/pos')[:1000]
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/pos/{}'.format(file),'r',encoding='utf-8') as f:
+            review = nltk.word_tokenize(f.read())
+            feature_sets.append((find_features(review),'pos'))
+            
+files = os.listdir('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/neg')[:1000]
+for file in files:
+    with open('C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/neg/{}'.format(file),'r',encoding='utf-8') as f:
+            review = nltk.word_tokenize(f.read())
+            feature_sets.append((find_features(review),'neg'))</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-2">2</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-4">4</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-6">6</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-8">8</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-10">10</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-12">12</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-14">14</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-15">15</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-16">16</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-17">17</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-18">18</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-19">19</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-20">20</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-21">21</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-22">22</div><div class="crayon-num" data-line="crayon-5af82e92e2d60049604998-23">23</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d60049604998-24">24</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d60049604998-1"><span class="crayon-v">feature_sets</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-sy">[</span><span class="crayon-sy">]</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-2"><span class="crayon-v">files</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos'</span><span class="crayon-sy">)</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">1000</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-3"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/pos/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-o">=</span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">feature_sets</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-sy">(</span><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">review</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'pos'</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-7"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-8"><span class="crayon-v">files</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg'</span><span class="crayon-sy">)</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">1000</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-9"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-10"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/train/neg/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-o">=</span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-11"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-12"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">feature_sets</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-sy">(</span><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">review</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'neg'</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-13"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-14"><span class="crayon-v">files</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/pos'</span><span class="crayon-sy">)</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">1000</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-15"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-16"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/pos/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-o">=</span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-17"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-18"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">feature_sets</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-sy">(</span><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">review</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'pos'</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-19"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-20"><span class="crayon-v">files</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">os</span><span class="crayon-sy">.</span><span class="crayon-e">listdir</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/neg'</span><span class="crayon-sy">)</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">1000</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-21"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-e">file </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-v">files</span><span class="crayon-o">:</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-22"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">with </span><span class="crayon-e">open</span><span class="crayon-sy">(</span><span class="crayon-s">'C:/Users/lifebloom/Desktop/udsl/text_mining/aclImdb/test/neg/{}'</span><span class="crayon-sy">.</span><span class="crayon-e">format</span><span class="crayon-sy">(</span><span class="crayon-v">file</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'r'</span><span class="crayon-sy">,</span><span class="crayon-v">encoding</span><span class="crayon-o">=</span><span class="crayon-s">'utf-8'</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-v">f</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-5af82e92e2d60049604998-23"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">review</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-e">word_tokenize</span><span class="crayon-sy">(</span><span class="crayon-v">f</span><span class="crayon-sy">.</span><span class="crayon-e">read</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d60049604998-24"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-v">feature_sets</span><span class="crayon-sy">.</span><span class="crayon-e">append</span><span class="crayon-sy">(</span><span class="crayon-sy">(</span><span class="crayon-e">find_features</span><span class="crayon-sy">(</span><span class="crayon-v">review</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-s">'neg'</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0013 seconds] -->
+<p>training,test set을 위한 feature set을 만들어준다음</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d63738070634" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">training_set = feature_sets[:2000]
+test_set = feature_sets[2000:]</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d63738070634-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82e92e2d63738070634-2">2</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d63738070634-1"><span class="crayon-v">training_set</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">feature_sets</span><span class="crayon-sy">[</span><span class="crayon-o">:</span><span class="crayon-cn">2000</span><span class="crayon-sy">]</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82e92e2d63738070634-2"><span class="crayon-v">test_set</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">feature_sets</span><span class="crayon-sy">[</span><span class="crayon-cn">2000</span><span class="crayon-o">:</span><span class="crayon-sy">]</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>순서대로 앞의 2000 set은 training 나머지는 test set으로 분류합니다</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d65830585256" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">clf = nltk.NaiveBayesClassifier.train(training_set)</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d65830585256-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d65830585256-1"><span class="crayon-v">clf</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-v">NaiveBayesClassifier</span><span class="crayon-sy">.</span><span class="crayon-e">train</span><span class="crayon-sy">(</span><span class="crayon-v">training_set</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>그 다음 nltk의 나이브 베이즈 분류기를 실행해주면 됩니다. 전처리에 비해 정말 간단합니다…</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d67281854068" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">result = nltk.classify.accuracy(clf, test_set)*100</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d67281854068-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d67281854068-1"><span class="crayon-v">result</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">nltk</span><span class="crayon-sy">.</span><span class="crayon-v">classify</span><span class="crayon-sy">.</span><span class="crayon-e">accuracy</span><span class="crayon-sy">(</span><span class="crayon-v">clf</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">test_set</span><span class="crayon-sy">)</span><span class="crayon-o">*</span><span class="crayon-cn">100</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>분류기를 training한 뒤에는 test set에서 얼마나 잘 작동하는지 살펴봅니다.</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82e92e2d69288338885" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">print('Accuracy of the Naive Bayes classification model: ', result)</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82e92e2d69288338885-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82e92e2d69288338885-1"><span class="crayon-e">print</span><span class="crayon-sy">(</span><span class="crayon-s">'Accuracy of the Naive Bayes classification model: '</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">result</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>82%의 분류율이 나옵니다. 샘플 데이터라서 그런지 생각보다 높은 분류율을 보여주는 것 같네요. 같은 방법으로 전체 데이터(train 25000, test 25000)으로 한 결과&nbsp;82.756의 정확도로 2000개의 train 데이터의 경우와 비교해 크게 향상되진 않았습니다.</p>
+<p>&nbsp;</p>
+<p>다음 포스팅에서는 나머지 감성 분석 방법들에 대해 알아보겠습니다.</p>
+<div class="extra-hatom-entry-title"><span class="entry-title">Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편</span></div>	</div>
+
+	<footer class="entry-meta-bar clearfix"><div class="entry-meta clearfix">
+			<span class="by-author author vcard"><a class="url fn n" href="http://www.lifebloom.biz/author/user/">kis0403</a></span>
+
+			<span class="date"><a href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/" title="3:58 오후" rel="bookmark"><time class="entry-date published" datetime="2017-08-18T15:58:10+00:00">8월 18, 2017</time><time class="updated" datetime="2017-08-27T15:24:49+00:00">8월 27, 2017</time></a></span>				<span class="category"><a href="http://www.lifebloom.biz/category/py/tm/" rel="category tag">Text Mining</a></span>
+							<span class="comments"><a href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/#respond">댓글 없음</a></span>
+			<span class="edit-link"><a class="post-edit-link" href="http://www.lifebloom.biz/wp-admin/post.php?post=314&amp;action=edit">편집</a></span></div></footer>
+	</article>
+						<ul class="default-wp-page clearfix">
+			<li class="previous"><a href="http://www.lifebloom.biz/2017/08/05/tableau%eb%a5%bc-%ec%9d%b4%ec%9a%a9%ed%95%9c-%ec%a7%80%eb%a6%ac-%ec%a0%95%eb%b3%b4-%ec%8b%9c%ea%b0%81%ed%99%94/" rel="prev"><span class="meta-nav">←</span> Tableau를 이용한 지리 정보 시각화</a></li>
+			<li class="next"><a href="http://www.lifebloom.biz/2017/08/21/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-an-2/" rel="next">Python을 활용한 텍스트 마이닝 10.텍스트 분석-감성 분석(Sentiment Analysis) 3편 <span class="meta-nav">→</span></a></li>
+		</ul>
+	
+				
+<div id="comments" class="comments-area">
+
+	
+	
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">답글 남기기 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/#respond" style="display:none;">응답 취소</a></small></h3>			<form action="http://www.lifebloom.biz/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate="">
+				<p class="logged-in-as"><a href="http://www.lifebloom.biz/wp-admin/profile.php" aria-label="kis0403로(으로) 로그인함. 프로필 편집하기.">kis0403로(으로) 로그인 함</a>. <a href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;redirect_to=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F&amp;_wpnonce=1385134d9b">로그아웃?</a></p><p class="comment-form-comment"><label for="comment">댓글</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="댓글 달기"> <input type="hidden" name="comment_post_ID" value="314" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><input type="hidden" id="_wp_unfiltered_html_comment_disabled" name="_wp_unfiltered_html_comment" value="b994c4e766"><script>(function(){if(window===window.parent){document.getElementById('_wp_unfiltered_html_comment_disabled').name='_wp_unfiltered_html_comment';}})();</script>
+			</form>
+			</div><!-- #respond -->
+	
+</div><!-- #comments -->
+			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+	
+<div id="secondary">
+			
+		<aside id="search-2" class="widget widget_search"><h3 class="widget-title"><span>Search</span></h3><form action="http://www.lifebloom.biz/" class="search-form searchform clearfix" method="get">
+	<div class="search-wrap">
+		<input type="text" placeholder="검색" class="s field" name="s">
+		<button class="search-icon" type="submit"></button>
+	</div>
+</form><!-- .searchform --></aside>		<aside id="recent-posts-2" class="widget widget_recent_entries">		<h3 class="widget-title"><span>Recently posted</span></h3>		<ul>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/05/13/recommendation-system-1/">Recommendation System 1.</a>
+											<span class="post-date">5월 13, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/04/08/regression-with-machine-learning-3-regularization-for-spartsity%ed%9d%ac%ec%86%8c-%ed%95%99%ec%8a%b5/">Regression with Machine Learning 4. Regularization for spartsity(희소 학습)</a>
+											<span class="post-date">4월 8, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/03/27/%ea%b2%bd%ec%82%ac-%ed%95%98%ea%b0%95%eb%b2%95gradient-descent/">경사 하강법(Gradient Descent)</a>
+											<span class="post-date">3월 27, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/03/18/regression-with-machine-learning-3-constrained-least-squares%ec%a0%9c%ec%95%bd-%ec%b5%9c%ec%86%8c%ec%a0%9c%ea%b3%b1/">Regression with Machine Learning 3. Constrained Least Squares(제약 최소제곱)</a>
+											<span class="post-date">3월 18, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/03/18/regression-with-machine-learning-1-stochastic-gradient-descent%ed%99%95%eb%a5%a0%ec%a0%81-%ea%b2%bd%ec%82%ac%eb%b2%95/">Regression with Machine Learning 2. Stochastic Gradient Descent(확률적 경사법)</a>
+											<span class="post-date">3월 18, 2018</span>
+									</li>
+					</ul>
+		</aside><aside id="archives-2" class="widget widget_archive"><h3 class="widget-title"><span>Posts</span></h3>		<ul>
+			<li><a href="http://www.lifebloom.biz/2018/05/">2018년 5월</a>&nbsp;(1)</li>
+	<li><a href="http://www.lifebloom.biz/2018/04/">2018년 4월</a>&nbsp;(1)</li>
+	<li><a href="http://www.lifebloom.biz/2018/03/">2018년 3월</a>&nbsp;(5)</li>
+	<li><a href="http://www.lifebloom.biz/2018/01/">2018년 1월</a>&nbsp;(1)</li>
+	<li><a href="http://www.lifebloom.biz/2017/09/">2017년 9월</a>&nbsp;(2)</li>
+	<li><a href="http://www.lifebloom.biz/2017/08/">2017년 8월</a>&nbsp;(6)</li>
+	<li><a href="http://www.lifebloom.biz/2017/07/">2017년 7월</a>&nbsp;(12)</li>
+	<li><a href="http://www.lifebloom.biz/2017/06/">2017년 6월</a>&nbsp;(7)</li>
+		</ul>
+		</aside><aside id="meta-2" class="widget widget_meta"><h3 class="widget-title"><span>Etc</span></h3>			<ul>
+			<li><a rel="nofollow" href="http://www.lifebloom.biz/wp-admin/">사이트 관리</a></li>			<li><a rel="nofollow" href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;_wpnonce=1385134d9b">로그아웃</a></li>
+			<li><a href="http://www.lifebloom.biz/feed/">글 <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://www.lifebloom.biz/comments/feed/">댓글 <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://wordpress.org/" title="이 블로그는 가장 앞선 개인 발행 도구인 워드프레스로 운영됩니다.">WordPress.org</a></li>			</ul>
+			</aside><aside id="categories-3" class="widget widget_categories"><h3 class="widget-title"><span>category</span></h3>		<ul>
+	<li class="cat-item cat-item-20"><a href="http://www.lifebloom.biz/category/misc/">misc</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="http://www.lifebloom.biz/category/py/">Python</a> (17)
+<ul class="children">
+	<li class="cat-item cat-item-29"><a href="http://www.lifebloom.biz/category/py/wrg/">coding with python</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="http://www.lifebloom.biz/category/py/ins-py/">installation</a> (5)
+</li>
+	<li class="cat-item cat-item-26"><a href="http://www.lifebloom.biz/category/py/nn/">Neural Network</a> (1)
+</li>
+	<li class="cat-item cat-item-18"><a href="http://www.lifebloom.biz/category/py/tm/">Text Mining</a> (10)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://www.lifebloom.biz/category/r/">R</a> (14)
+<ul class="children">
+	<li class="cat-item cat-item-27"><a href="http://www.lifebloom.biz/category/r/2017-weather-contest/">2017 Weather Contest</a> (4)
+</li>
+	<li class="cat-item cat-item-28"><a href="http://www.lifebloom.biz/category/r/ml/">machine learning</a> (5)
+</li>
+	<li class="cat-item cat-item-25"><a href="http://www.lifebloom.biz/category/r/pb/">Packages &amp; Base</a> (2)
+</li>
+	<li class="cat-item cat-item-23"><a href="http://www.lifebloom.biz/category/r/recom/">Recommendation System</a> (2)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-22"><a href="http://www.lifebloom.biz/category/visualization/">Visualization</a> (2)
+</li>
+		</ul>
+</aside>	</div>
+	
+
+        </div><!-- .inner-wrap -->
+    </div><!-- #main -->
+    
+        <footer id="colophon" class="clearfix ">
+                <div class="footer-socket-wrapper clearfix">
+            <div class="inner-wrap">
+                <div class="footer-socket-area">
+                    <div class="copyright">Copyright © 2018 <a href="http://www.lifebloom.biz/" title="Lifebloom"><span>Lifebloom</span></a>. Powered by <a href="https://wordpress.org/" target="_blank" title="워드프레스"><span>워드프레스</span></a>. 테마: Spacious(<a href="https://themegrill.com/themes/spacious" target="_blank" title="ThemeGrill" rel="designer"><span>ThemeGrill</span></a> 제작).</div>                    <nav class="small-menu clearfix">
+                                            </nav>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <a href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/#masthead" id="scroll-up" style="display: none;"></a>
+</div><!-- #page -->
+<script type="text/javascript">function ctSetCookie(c_name,value,def_value){document.cookie=c_name+'='+escape(value)+'; path=/';}ctSetCookie('ct_checkjs','421807227','0');</script><script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/admin-bar.min.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/apbct-public.js.다운로드"></script>
+<script type="text/javascript">//<![CDATA[
+var ctNocache={"ajaxurl":"http:\/\/www.lifebloom.biz\/wp-admin\/admin-ajax.php","info_flag":"","set_cookies_flag":"1","blog_home":"http:\/\/www.lifebloom.biz\/"};
+//]]></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/cleantalk_nocache.js.다운로드"></script>
+<script type="text/javascript">//<![CDATA[
+var ctPublic={"ct_ajax_nonce":"688d7fc4c6","ajaxurl":"http:\/\/www.lifebloom.biz\/wp-admin\/admin-ajax.php","ct_feedback_error":"Error occured while sending feedback.","ct_feedback_no_hash":"Feedback wasn't sent. There is no associated request.","ct_feedback_msg":"Feedback has been sent to CleanTalk Dashboard."};
+//]]></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/cleantalk-public-admin.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/comment-reply.min.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/navigation.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/wp-embed.min.js.다운로드"></script>
+<script type="text/javascript" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/MathJax.js.다운로드"></script>
+	<!--[if lte IE 8]>
+		<script type="text/javascript">
+			document.body.className = document.body.className.replace( /(^|\s)(no-)?customize-support(?=\s|$)/, '' ) + ' no-customize-support';
+		</script>
+	<![endif]-->
+	<!--[if gte IE 9]><!-->
+		<script type="text/javascript">(function(){var request,b=document.body,c='className',cs='customize-support',rcs=new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');request=true;b[c]=b[c].replace(rcs,' ');b[c]+=(window.postMessage&&request?' ':' no-')+cs;}());</script>
+	<!--<![endif]-->
+			<div id="wpadminbar" class="">
+							<a class="screen-reader-shortcut" href="http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/#wp-toolbar" tabindex="1">툴바로 바로가기</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="툴바" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/about.php"><span class="ab-icon"></span><span class="screen-reader-text">워드프레스 소개</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
+		<li id="wp-admin-bar-about"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/about.php">워드프레스 소개</a>		</li></ul><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/">문서</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="https://wordpress.org/support/">지원 포럼</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="https://wordpress.org/support/forum/requests-and-feedback">피드백</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-site-name" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/">Lifebloom</a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-site-name-default" class="ab-submenu">
+		<li id="wp-admin-bar-dashboard"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/">알림판</a>		</li></ul><ul id="wp-admin-bar-appearance" class="ab-submenu">
+		<li id="wp-admin-bar-themes"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/themes.php">테마</a>		</li>
+		<li id="wp-admin-bar-widgets"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/widgets.php">위젯</a>		</li>
+		<li id="wp-admin-bar-menus"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/nav-menus.php">메뉴</a>		</li>
+		<li id="wp-admin-bar-background" class="hide-if-customize"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/themes.php?page=custom-background">배경</a>		</li>
+		<li id="wp-admin-bar-header" class="hide-if-customize"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/themes.php?page=custom-header">헤더</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-customize" class="hide-if-no-customize"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/customize.php?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F">사용자 정의하기</a>		</li>
+		<li id="wp-admin-bar-updates"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/update-core.php" title="5 플러그인 업데이트, 1 테마 업데이트"><span class="ab-icon"></span><span class="ab-label">6</span><span class="screen-reader-text">5 플러그인 업데이트, 1 테마 업데이트</span></a>		</li>
+		<li id="wp-admin-bar-comments"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/edit-comments.php"><span class="ab-icon"></span><span class="ab-label awaiting-mod pending-count count-13" aria-hidden="true">13</span><span class="screen-reader-text">13 댓글이 검토를 기다리고 있습니다.</span></a>		</li>
+		<li id="wp-admin-bar-new-content" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/post-new.php"><span class="ab-icon"></span><span class="ab-label">새로 추가</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-new-content-default" class="ab-submenu">
+		<li id="wp-admin-bar-new-post"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/post-new.php">글</a>		</li>
+		<li id="wp-admin-bar-new-media"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/media-new.php">미디어</a>		</li>
+		<li id="wp-admin-bar-new-page"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/post-new.php?post_type=page">페이지</a>		</li>
+		<li id="wp-admin-bar-new-user"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/user-new.php">사용자</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-edit"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/post.php?post=314&amp;action=edit">이 글 편집</a>		</li>
+		<li id="wp-admin-bar-wpseo-menu" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_dashboard"><div id="yoast-ab-icon" class="ab-item yoast-logo svg"><span class="screen-reader-text">SEO</span></div><div class="wpseo-score-icon adminbar-seo-score ok"><span class="adminbar-seo-score-text screen-reader-text"></span></div></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-menu-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-configuration-wizard"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_configurator">Configuration Wizard</a>		</li>
+		<li id="wp-admin-bar-wpseo-kwresearch" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true">Keyword Research</div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-kwresearch-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-adwordsexternal"><a class="ab-item" href="https://adwords.google.com/keywordplanner" target="_blank">AdWords External</a>		</li>
+		<li id="wp-admin-bar-wpseo-googleinsights"><a class="ab-item" href="https://www.google.com/trends/explore#q=python+%ED%85%8D%EC%8A%A4%ED%8A%B8+%EB%A7%88%EC%9D%B4%EB%8B%9D" target="_blank">Google Trends</a>		</li>
+		<li id="wp-admin-bar-wpseo-wordtracker"><a class="ab-item" href="http://tools.seobook.com/keyword-tools/seobook/?keyword=python+%ED%85%8D%EC%8A%A4%ED%8A%B8+%EB%A7%88%EC%9D%B4%EB%8B%9D" target="_blank">SEO Book</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-wpseo-analysis" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true">Analyze this page</div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-analysis-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-inlinks-ose"><a class="ab-item" href="http://moz.com/researchtools/ose/links?site=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Check Inlinks (OSE)</a>		</li>
+		<li id="wp-admin-bar-wpseo-kwdensity"><a class="ab-item" href="http://www.zippy.co.uk/keyworddensity/index.php?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F&amp;keyword=python+%ED%85%8D%EC%8A%A4%ED%8A%B8+%EB%A7%88%EC%9D%B4%EB%8B%9D" target="_blank">Check Keyword Density</a>		</li>
+		<li id="wp-admin-bar-wpseo-cache"><a class="ab-item" href="http://webcache.googleusercontent.com/search?strip=1&amp;q=cache:http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Check Google Cache</a>		</li>
+		<li id="wp-admin-bar-wpseo-header"><a class="ab-item" href="http://quixapp.com/headers/?r=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Check Headers</a>		</li>
+		<li id="wp-admin-bar-wpseo-structureddata"><a class="ab-item" href="https://search.google.com/structured-data/testing-tool#url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Google Structured Data Test</a>		</li>
+		<li id="wp-admin-bar-wpseo-facebookdebug"><a class="ab-item" href="http://developers.facebook.com/tools/debug/og/object?q=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Facebook Debugger</a>		</li>
+		<li id="wp-admin-bar-wpseo-pinterestvalidator"><a class="ab-item" href="https://developers.pinterest.com/tools/url-debugger/?link=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Pinterest Rich Pins Validator</a>		</li>
+		<li id="wp-admin-bar-wpseo-htmlvalidation"><a class="ab-item" href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">HTML Validator</a>		</li>
+		<li id="wp-admin-bar-wpseo-cssvalidation"><a class="ab-item" href="http://jigsaw.w3.org/css-validator/validator?uri=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">CSS Validator</a>		</li>
+		<li id="wp-admin-bar-wpseo-pagespeed"><a class="ab-item" href="http://developers.google.com/speed/pagespeed/insights/?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Google Page Speed Test</a>		</li>
+		<li id="wp-admin-bar-wpseo-google-mobile-friendly"><a class="ab-item" href="https://www.google.com/webmasters/tools/mobile-friendly/?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F08%2F18%2Fpython%25ec%259d%2584-%25ed%2599%259c%25ec%259a%25a9%25ed%2595%259c-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25a7%2588%25ec%259d%25b4%25eb%258b%259d-9-%25ed%2585%258d%25ec%258a%25a4%25ed%258a%25b8-%25eb%25b6%2584%25ec%2584%259d-%25ea%25b0%2590%25ec%2584%25b1-%25eb%25b6%2584%25ec%2584%259dsentiment-ana%2F" target="_blank">Mobile-Friendly Test</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-wpseo-settings" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true">SEO Settings</div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-settings-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-general"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_dashboard">Dashboard</a>		</li>
+		<li id="wp-admin-bar-wpseo-titles"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_titles">Search Appearance</a>		</li>
+		<li id="wp-admin-bar-wpseo-search-console"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_search_console">Search Console</a>		</li>
+		<li id="wp-admin-bar-wpseo-social"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_social">Social</a>		</li>
+		<li id="wp-admin-bar-wpseo-tools"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_tools">Tools</a>		</li>
+		<li id="wp-admin-bar-wpseo-licenses"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_licenses">Premium</a>		</li></ul></div>		</li></ul></div>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://www.lifebloom.biz/" method="get" id="adminbarsearch"><input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150"><label for="adminbar-search" class="screen-reader-text">검색</label><input type="submit" class="adminbar-button" value="검색"></form></div>		</li>
+		<li id="wp-admin-bar-my-account" class="menupop with-avatar"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/profile.php">안녕하세요. <span class="display-name">kis0403</span>님<script pagespeed_no_defer="">//<![CDATA[
+(function(){var g=this,h=function(b,d){var a=b.split("."),c=g;a[0]in c||!c.execScript||c.execScript("var "+a[0]);for(var e;a.length&&(e=a.shift());)a.length||void 0===d?c[e]?c=c[e]:c=c[e]={}:c[e]=d};var l=function(b){var d=b.length;if(0<d){for(var a=Array(d),c=0;c<d;c++)a[c]=b[c];return a}return[]};var m=function(b){var d=window;if(d.addEventListener)d.addEventListener("load",b,!1);else if(d.attachEvent)d.attachEvent("onload",b);else{var a=d.onload;d.onload=function(){b.call(this);a&&a.call(this)}}};var n,p=function(b,d,a,c,e){this.f=b;this.h=d;this.i=a;this.c=e;this.e={height:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,width:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth};this.g=c;this.b={};this.a=[];this.d={}},q=function(b,d){var a,c,e=d.getAttribute("pagespeed_url_hash");if(a=e&&!(e in b.d))if(0>=d.offsetWidth&&0>=d.offsetHeight)a=!1;else{c=d.getBoundingClientRect();var f=document.body;a=c.top+("pageYOffset"in window?window.pageYOffset:(document.documentElement||f.parentNode||f).scrollTop);c=c.left+("pageXOffset"in window?window.pageXOffset:(document.documentElement||f.parentNode||f).scrollLeft);f=a.toString()+","+c;b.b.hasOwnProperty(f)?a=!1:(b.b[f]=!0,a=a<=b.e.height&&c<=b.e.width)}a&&(b.a.push(e),b.d[e]=!0)};p.prototype.checkImageForCriticality=function(b){b.getBoundingClientRect&&q(this,b)};h("pagespeed.CriticalImages.checkImageForCriticality",function(b){n.checkImageForCriticality(b)});h("pagespeed.CriticalImages.checkCriticalImages",function(){r(n)});var r=function(b){b.b={};for(var d=["IMG","INPUT"],a=[],c=0;c<d.length;++c)a=a.concat(l(document.getElementsByTagName(d[c])));if(0!=a.length&&a[0].getBoundingClientRect){for(c=0;d=a[c];++c)q(b,d);a="oh="+b.i;b.c&&(a+="&n="+b.c);if(d=0!=b.a.length)for(a+="&ci="+encodeURIComponent(b.a[0]),c=1;c<b.a.length;++c){var e=","+encodeURIComponent(b.a[c]);131072>=a.length+e.length&&(a+=e)}b.g&&(e="&rd="+encodeURIComponent(JSON.stringify(s())),131072>=a.length+e.length&&(a+=e),d=!0);t=a;if(d){c=b.f;b=b.h;var f;if(window.XMLHttpRequest)f=new XMLHttpRequest;else if(window.ActiveXObject)try{f=new ActiveXObject("Msxml2.XMLHTTP")}catch(k){try{f=new ActiveXObject("Microsoft.XMLHTTP")}catch(u){}}f&&(f.open("POST",c+(-1==c.indexOf("?")?"?":"&")+"url="+encodeURIComponent(b)),f.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),f.send(a))}}},s=function(){var b={},d=document.getElementsByTagName("IMG");if(0==d.length)return{};var a=d[0];if(!("naturalWidth"in a&&"naturalHeight"in a))return{};for(var c=0;a=d[c];++c){var e=a.getAttribute("pagespeed_url_hash");e&&(!(e in b)&&0<a.width&&0<a.height&&0<a.naturalWidth&&0<a.naturalHeight||e in b&&a.width>=b[e].k&&a.height>=b[e].j)&&(b[e]={rw:a.width,rh:a.height,ow:a.naturalWidth,oh:a.naturalHeight})}return b},t="";h("pagespeed.CriticalImages.getBeaconData",function(){return t});h("pagespeed.CriticalImages.Run",function(b,d,a,c,e,f){var k=new p(b,d,a,e,f);n=k;c&&m(function(){window.setTimeout(function(){r(k)},0)})});})();pagespeed.CriticalImages.Run('/mod_pagespeed_beacon','http://www.lifebloom.biz/2017/08/18/python%ec%9d%84-%ed%99%9c%ec%9a%a9%ed%95%9c-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%a7%88%ec%9d%b4%eb%8b%9d-9-%ed%85%8d%ec%8a%a4%ed%8a%b8-%eb%b6%84%ec%84%9d-%ea%b0%90%ec%84%b1-%eb%b6%84%ec%84%9dsentiment-ana/','YddRYU7ik1',true,false,'5xtB5S8fv_g');
+//]]></script><img alt="" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/b58996c504c5638798eb6b511e6f49af.png" srcset="http://2.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af?s=52&amp;d=mm&amp;r=g 2x" class="avatar avatar-26 photo" height="26" width="26" pagespeed_url_hash="1456192687" onload="pagespeed.CriticalImages.checkImageForCriticality(this);"></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-user-actions" class="ab-submenu">
+		<li id="wp-admin-bar-user-info"><a class="ab-item" tabindex="-1" href="http://www.lifebloom.biz/wp-admin/profile.php"><img alt="" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/b58996c504c5638798eb6b511e6f49af(1).png" srcset="http://2.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64" pagespeed_url_hash="1248907405" onload="pagespeed.CriticalImages.checkImageForCriticality(this);"><span class="display-name">kis0403</span><span class="username">user</span></a>		</li>
+		<li id="wp-admin-bar-edit-profile"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/profile.php">내 프로필 편집</a>		</li>
+		<li id="wp-admin-bar-logout"><a class="ab-item" href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;_wpnonce=1385134d9b">로그아웃</a>		</li></ul></div>		</li></ul>			</div>
+						<a class="screen-reader-shortcut" href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;_wpnonce=1385134d9b">로그아웃</a>
+					</div>
+
+		  <div id="bitnami-banner" data-banner-id="4db78">  <style>#bitnami-banner{z-index:100000;height:80px;padding:0px;width:120px;background:transparent;position:fixed;right:0px;bottom:0px;border:0px solid #ededed}#bitnami-banner .bitnami-corner-image-div{position:fixed;right:0px;bottom:0px;border:0px;z-index:100001;height:110px}#bitnami-banner .bitnami-corner-image-div .bitnami-corner-image{position:fixed;right:0px;bottom:0px;border:0px;z-index:100001;height:110px}#bitnami-close-banner-button{height:12px;width:12px;z-index:10000000000;position:fixed;right:5px;bottom:65px;display:none;cursor:pointer}</style>  <img id="bitnami-close-banner-button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIMAAACECAMAAACERmjsAAABOFBMVEUAAAAqKiosLCwtLS0uLi4wMDAzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6OjpDQ0NJSUlKSkpMTExQUFBRUVFTU1NZWVlaWlpeXl5lZWVmZmZqamptbW1vb293d3d5eXl6enp8fHx+fn5/f3+AgICBgYGDg4OFhYWGhoaHh4eNjY2Pj4+YmJicnJydnZ2fn5+jo6OkpKSnp6erq6utra2xsbGzs7O0tLS1tbW7u7u+vr7AwMDFxcXHx8fIyMjJycnOzs7Pz8/R0dHZ2dne3t7h4eHj4+Pn5+fp6ent7e3v7+/w8PDx8fHy8vLz8/P09PT29vb39/f4+Pj5+fn6+vr8/Pz+/v7///8mJiYlJSUkJCQjIyMiIiIRERESEhITExMUFBQVFRUXFxcYGBgbGxscHBweHh4fHx8gICCmjOJJAAAAXHRSTlMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzVXeZu6CVAwYAAAQGSURBVHjaxdvZVtRAEAbg0nHBFVBERds94q7gvm/DiCKgIAVq4wbi+7+BF0MmSaf3qnTqcjj5z3e4mNP1dwawPivXd0oppZR/T8wixyye+d4PXLu0pPkz1D/qjsrBrD5kILzYWwQeeu1jmN6U5ZlYphIu/yjn/brmNtyWyowTEUINzFyGGoGKEPXAzG7QEGgIoQvMbAYtgYIQ+sDMbDAQ4hHCFJiZDEZCLEKYAzO9wUKIQwhbYKYzWAkxCGEPzOoGByEcIVyBmWpwEkIRwh2YVQ0ehDCE8AnMygYvQghC+AVmhcGT4I8QvoFZbvAm+CKEf2DWN0xJyYsQIYGTiIBv/kheRBBByscIXw6HPeJEBBLkzjm4KiUrQgTnTcBvyYoIJ0gJEc9YEDGEOIMREUWINBgQcYRYgxYRSYg2aBCxhHhDDRFNIBgURDxBwh4eBIGwBc/WORAEgpwCPCfpCAphHAE/7ScjKIRv7xAQux0igkLYetk/R9EQS1RC/zxJQuyiErbP1SQElZDvF60gtgmDPasFRE4o9s3kiAGhtHcnRhSEcv+QFFEiVHqYhIgyodpHJUNUCEovlwhRJaj9ZBKEQqj1tAkQKqHeVzeOqBE0vX3DiDpBe3/RSUvQGZpE6AhaQ3MILUFvaAqhJxgMzSAMBJOhCYSJYDTwI4wEs4EbYSZYDLwIC8Fm4ETYCFYDH8JKsBu4EHaCw8CDcBBcBg6Ei+A00BFOgttARbgJHgbsblAMz5HDIEj/B49LF2iY4IOApgkeCGic4EZA8wQnAhIQXAhIQXAgIAnBjoA0BCsCEhFsCEhFsCAgGcGMgHQEIwISEkwISEkwICApQY+AtAQtAhITdAhITdAgIDmhjoD0hBoCWiCoCGiDoCCgFUIVAe0QKghoiVBGQFuEEgJaIxQIaI8wQECLhBwBVMLWPeqrCwhIfn+B/P4EIF6gtiwkxHFEwCf0ooeEuIUw1yETaIjNLpxiqbsoiFFgIdAQwEMgIYCJQEEAF4GAADZCPAL4CNEIYCTEIoCTEImAEU5CFGI3vN3gJEQg1p8C3mAlhCPOIuDKGCshFHFwEQFxYYSVEIYY6vXPUf4IL0IIYqiXnyd9EZ4Ef8RQrzhX+yG8Cb6IPiHfL3wQAQQ/xDZhsGe5EUEEH0ROKPZNFyKQ4EYMCKW9e2GYleBCFIRy/2BDRBDsiBKh0sOYEVEEG6JMqPZRJkQkwYyoEJRebn6YlWBCVAlqP6lDEAh6hEKo9bR1BImgQ6iEel89r3xP/KMRELvKjwL29dy9/fLkz9ITR2aQOu9PlgmnP3rdobw6kD+wcXMFGeb+Wh6445HmCkV7l/T5wZVjna0RcWcGeWZ2+vzRr6tjF+9+0BH+A2TGXdGEY/ycAAAAAElFTkSuQmCC" pagespeed_url_hash="1436111899" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">  <div class="bitnami-corner-image-div">     <a href="http://www.lifebloom.biz/bitnami/index.html" target="_blank">       <img class="bitnami-corner-image" alt="Bitnami" src="./Python을 활용한 텍스트 마이닝 9.텍스트 분석-감성 분석(Sentiment Analysis) 2편 - Lifebloom_files/xcorner-logo.png.pagespeed.ic.6TukXqDtLV.png" pagespeed_url_hash="23950338" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">     </a>  </div>  <script type="text/javascript">//<![CDATA[
+(function(){var banner=document.getElementById("bitnami-banner");var closeButton=document.getElementById("bitnami-close-banner-button");var toggleCloseButton=function toggleCloseButton(open){if(closeButton){if(open&&banner&&banner.style.display!="none"){closeButton.style.display="block";}else{closeButton.style.display="none";}}
+return false;};var setCookie=function setCookie(cname,cvalue,exdays){var d=new Date();d.setTime(d.getTime()+(exdays*24*60*60*1000));var expires="expires="+d.toUTCString();document.cookie=cname+"="+cvalue+"; "+expires;};var closeBanner=function closeBanner(open){if(banner){var suffix=banner.getAttribute('data-banner-id')||'global';banner.style.display="none";setCookie('_bitnami_closed_banner_'+suffix,"1",30);}
+return false;};banner.onmouseover=function(){return toggleCloseButton(1);};banner.onmouseout=function(){return toggleCloseButton(0);};closeButton.onclick=closeBanner;}());
+//]]></script> </div>   
+
+</body></html>

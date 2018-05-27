@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<!-- saved from url=(0141)http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/ -->
+<html lang="ko-KR" prefix="og: http://ogp.me/ns#"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="http://www.lifebloom.biz/xmlrpc.php">
+	<title>Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom</title>
+
+<!-- This site is optimized with the Yoast SEO plugin v7.2 - https://yoast.com/wordpress/plugins/seo/ -->
+<!-- Admin only notice: this page doesn&#039;t show a meta description because it doesn&#039;t have one, either write it for this page specifically or go into the SEO -&gt; Search Appearance menu and set up a template. -->
+<link rel="canonical" href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom">
+<meta property="og:description" content="매일 4GB RAM으로 고통받다가 드디어 데스크탑을 새로 구매하였습니다. tensorflow의 GPU환경도 사용해보기 위해 그래픽 카드도 맞췄습니다. 그 기념으로(?) Tensorflow GPU환경을 설치하는 법에 대해 포스팅하려고 합니다. 설치환경 OS : Windows 10 Home 64bit(10.0 빌드 10586) 그래픽카드 : NVIDIA GeForce GTX 1050 프로세서">
+<meta property="og:url" content="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/">
+<meta property="og:site_name" content="Lifebloom">
+<meta property="article:section" content="installation">
+<meta property="article:published_time" content="2017-07-31T11:19:05+00:00">
+<meta property="article:modified_time" content="2017-08-27T15:25:47+00:00">
+<meta property="og:updated_time" content="2017-08-27T15:25:47+00:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="매일 4GB RAM으로 고통받다가 드디어 데스크탑을 새로 구매하였습니다. tensorflow의 GPU환경도 사용해보기 위해 그래픽 카드도 맞췄습니다. 그 기념으로(?) Tensorflow GPU환경을 설치하는 법에 대해 포스팅하려고 합니다. 설치환경 OS : Windows 10 Home 64bit(10.0 빌드 10586) 그래픽카드 : NVIDIA GeForce GTX 1050 프로세서">
+<meta name="twitter:title" content="Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom">
+<!-- / Yoast SEO plugin. -->
+
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Lifebloom » 피드" href="http://www.lifebloom.biz/feed/">
+<link rel="alternate" type="application/rss+xml" title="Lifebloom » 댓글 피드" href="http://www.lifebloom.biz/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Lifebloom » Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) 댓글 피드" href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/feed/">
+		<script type="text/javascript">window._wpemojiSettings={"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.lifebloom.biz\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.5"}};!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56692,8205,9792,65039],[55357,56692,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);</script><script src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/wp-emoji-release.min.js.다운로드" type="text/javascript" defer=""></script>
+		<style type="text/css">img.wp-smiley,img.emoji{display:inline!important;border:none!important;box-shadow:none!important;height:1em!important;width:1em!important;margin:0 .07em!important;vertical-align:-.1em!important;background:none!important;padding:0!important}</style>
+<link rel="stylesheet" id="dashicons-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/dashicons.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/admin-bar.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="crayon-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/crayon.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="crayon-theme-classic-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/classic.css" type="text/css" media="all">
+<link rel="stylesheet" id="crayon-font-monaco-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/monaco.css" type="text/css" media="all">
+<link rel="stylesheet" id="ct_public_admin_css-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/cleantalk-public-admin.css" type="text/css" media="all">
+<link rel="stylesheet" id="yoast-seo-adminbar-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/adminbar-720.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="spacious_style-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="spacious-genericons-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/genericons.css" type="text/css" media="all">
+<link rel="stylesheet" id="spacious-font-awesome-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/font-awesome.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="google_fonts-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="tablepress-default-css" href="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/default.min.css" type="text/css" media="all">
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/jquery.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/jquery-migrate.min.js.다운로드"></script>
+<script type="text/javascript">//<![CDATA[
+var CrayonSyntaxSettings={"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"http:\/\/www.lifebloom.biz\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};var CrayonSyntaxStrings={"copy":"%s\ub85c \ubcf5\uc0ac, %s\ub85c \ubd99\uc5ec\ub123\uae30","minimize":"Click To Expand Code"};
+//]]></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/crayon.min.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/spacious-custom.js.다운로드"></script>
+<!--[if lte IE 8]>
+<script type='text/javascript' src='http://www.lifebloom.biz/wp-content/themes/spacious/js/html5shiv.min.js?ver=4.9.5'></script>
+<![endif]-->
+<link rel="https://api.w.org/" href="http://www.lifebloom.biz/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.lifebloom.biz/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.lifebloom.biz/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 4.9.5">
+<link rel="shortlink" href="http://www.lifebloom.biz/?p=276">
+<link rel="alternate" type="application/json+oembed" href="http://www.lifebloom.biz/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://www.lifebloom.biz/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F&amp;format=xml">
+	<style type="text/css">#site-title a{color:#5cd606}#site-description{color:#5cd606}</style>
+	<style type="text/css" id="custom-background-css">body.custom-background{background-color:#c4c4c4;background-image:url(http://www.lifebloom.biz/wp-content/uploads/2017/06/DSC09756.jpg);background-position:left top;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}</style>
+<style type="text/css" media="print">#wpadminbar{display:none}</style>
+<style type="text/css" media="screen">html{margin-top:32px!important}* html body{margin-top:32px!important}@media screen and (max-width:782px ){html{margin-top:46px!important}* html body{margin-top:46px!important}}</style>
+<link rel="icon" href="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-32x32.png" sizes="32x32">
+<link rel="icon" href="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-180x180.png">
+<meta name="msapplication-TileImage" content="http://www.lifebloom.biz/wp-content/uploads/2017/06/cropped-dropbox-big-logo-270x270.png">
+<style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style></head>
+
+<body class="post-template-default single single-post postid-276 single-format-standard logged-in admin-bar custom-background  customize-support"><div id="MathJax_Message" style="display: none;"></div>
+<div id="page" class="hfeed site">
+	
+	
+	<header id="masthead" class="site-header clearfix ">
+
+		
+		<div id="header-text-nav-container">
+						<div class="inner-wrap">
+			
+				<div id="header-text-nav-wrap" class="clearfix">
+					<div id="header-left-section">
+						
+							<div id="header-text" class="">
+																	<h3 id="site-title">
+										<a href="http://www.lifebloom.biz/" title="Lifebloom" rel="home">Lifebloom</a>
+									</h3>
+																<p id="site-description">About R, Python, SAS, Machine Learning, Data Mining and miscellaneous things</p>
+								<!-- #site-description -->
+							</div><!-- #header-text -->
+
+												</div><!-- #header-left-section -->
+					<div id="header-right-section">
+						
+							<nav id="site-navigation" class="main-navigation" role="navigation">
+								<h3 class="menu-toggle">메뉴</h3>
+								<div class="menu-primary-container"><ul id="menu-main" class="menu nav-menu"><li id="menu-item-37" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-37"><a href="http://www.lifebloom.biz/">홈</a></li>
+<li id="menu-item-83" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-83"><a href="http://www.lifebloom.biz/profile/">Profile</a></li>
+<li id="menu-item-85" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85"><a href="http://www.lifebloom.biz/sample-page/">Contact</a></li>
+<li id="menu-item-90" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-90"><a href="http://www.lifebloom.biz/category/r/">R</a>
+<ul class="sub-menu">
+	<li id="menu-item-376" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-376"><a href="http://www.lifebloom.biz/category/r/ml/">machine learning</a></li>
+	<li id="menu-item-286" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-286"><a href="http://www.lifebloom.biz/category/r/pb/">Packages &amp; Base</a></li>
+	<li id="menu-item-287" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-287"><a href="http://www.lifebloom.biz/category/r/recom/">Recommendation System</a></li>
+	<li id="menu-item-364" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-364"><a href="http://www.lifebloom.biz/category/r/2017-weather-contest/">2017 Weather Contest</a></li>
+</ul>
+</li>
+<li id="menu-item-91" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-91"><a href="http://www.lifebloom.biz/category/py/">Python</a>
+<ul class="sub-menu">
+	<li id="menu-item-501" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-501"><a href="http://www.lifebloom.biz/category/py/wrg/">coding with python</a></li>
+	<li id="menu-item-93" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-93"><a href="http://www.lifebloom.biz/category/py/ins-py/">installation</a></li>
+	<li id="menu-item-92" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-92"><a href="http://www.lifebloom.biz/category/py/tm/">Text Mining</a></li>
+	<li id="menu-item-335" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-335"><a href="http://www.lifebloom.biz/category/py/nn/">Neural Network</a></li>
+</ul>
+</li>
+<li id="menu-item-225" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-225"><a href="http://www.lifebloom.biz/category/visualization/">Visualization</a></li>
+<li id="menu-item-168" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-168"><a href="http://www.lifebloom.biz/category/misc/">misc</a></li>
+</ul></div>							</nav>
+
+												</div><!-- #header-right-section -->
+
+				</div><!-- #header-text-nav-wrap -->
+								</div><!-- .inner-wrap -->
+						</div><!-- #header-text-nav-container -->
+
+		
+						<div class="header-post-title-container clearfix">
+					<div class="inner-wrap">
+						<div class="post-title-wrapper">
+																								<h1 class="header-post-title-class">Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU)</h1>
+																						</div>
+											</div>
+				</div>
+					</header>
+			<div id="main" class="clearfix">
+		<div class="inner-wrap">
+
+	
+	<div id="primary">
+		<div id="content" class="clearfix">
+			
+				
+<article id="post-276" class="post-276 post type-post status-publish format-standard hentry category-ins-py">
+		<div class="entry-content clearfix">
+		<p>매일 4GB RAM으로 고통받다가 드디어 데스크탑을 새로 구매하였습니다.</p>
+<p>tensorflow의 GPU환경도 사용해보기 위해 그래픽 카드도 맞췄습니다. 그 기념으로(?) Tensorflow GPU환경을 설치하는 법에 대해 포스팅하려고 합니다.</p>
+<p>설치환경</p>
+<p>OS : Windows 10 Home 64bit(10.0 빌드 10586)</p>
+<p>그래픽카드 : NVIDIA GeForce GTX 1050</p>
+<p>프로세서 : AMD Ryzen 5 1600 Six-core Processor</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>1. python설치</p>
+<p>최신 버전의 경우 호환성 문제가 발생할 수 있습니다. 저같은 경우는 3.6.1버젼으로 받았습니다.</p>
+<p><a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+<p>2. Anaconda설치</p>
+<p>4.4.0버전으로 받았습니다.</p>
+<p><a href="https://www.continuum.io/downloads">https://www.continuum.io/downloads</a></p>
+<p>3. tensorflow 환경 구축</p>
+<p>Anaconda Prompt창에서</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82eae6261c607176858" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">conda create -n tensorflow python=3.6</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82eae6261c607176858-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82eae6261c607176858-1"><span class="crayon-e">conda </span><span class="crayon-v">create</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">n</span><span class="crayon-h"> </span><span class="crayon-e">tensorflow </span><span class="crayon-v">python</span><span class="crayon-o">=</span><span class="crayon-cn">3.6</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p>를 입력해서 tensorflow라는 이름의 새로운 &nbsp;파이썬 환경을 만들고 y를 입력해주시면 설치를 시작하게 됩니다.</p>
+<p>4. tensorflow GPU환경 구축을 위한&nbsp;CUDA Toolkit,&nbsp;cuDNN v5.1 두 가지 프로그램을 설치해야 합니다.</p>
+<p>CUDA Toolkit&nbsp;<a href="https://developer.nvidia.com/cuda-downloads">https://developer.nvidia.com/cuda-downloads</a></p>
+<p>cuDNN&nbsp;<a href="https://developer.nvidia.com/rdp/form/cudnn-download-survey">https://developer.nvidia.com/rdp/form/cudnn-download-survey</a></p>
+<p>cuDNN의 경우 Nvidia Developer사이트의 회원 가입이 필요하므로 가입하시면 됩니다.</p>
+<p>주의하실 점은 윈도우 10환경에서는&nbsp;<a href="https://developer.nvidia.com/rdp/cudnn-download#a-collapseTwo" data-parent="#accordion" data-toggle="collapse">Download cuDNN v5.1 (Jan 20, 2017), for CUDA 8.0</a>&nbsp;즉, 5.1버전으로 다운로드 받으셔야 오류가 발생하지 않습니다. (몰라서 한참 찾아봤습니다 ㅠ)</p>
+<p>이제 다시 anaconda prompt로 돌아오셔서</p>
+<p>activate tensorflow</p>
+<p>를 입력하셔서 방금 전 만들었던 환경으로 접속합니다.</p>
+<p>5. tensorflow 설치</p>
+<p>입력 라인 앞 부분에 (tensorflow)로 바뀐것을 볼 수 있습니다.</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82eae62624893823910" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; z-index: 4;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/windows/gpu/tensorflow_gpu-1.2.1-cp36-cp36m-win_amd64.whl</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82eae62624893823910-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82eae62624893823910-1"><span class="crayon-e">pip </span><span class="crayon-v">install</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">ignore</span><span class="crayon-o">-</span><span class="crayon-v">installed</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">upgrade </span><span class="crayon-v">https</span><span class="crayon-o">:</span><span class="crayon-c">//storage.googleapis.com/tensorflow/windows/gpu/tensorflow_gpu-1.2.1-cp36-cp36m-win_amd64.whl</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>윗 라인을 입력하면 1.2.1버전의 tensorflow가 설치되는 것을 볼 수 있습니다.</p>
+<p>이제 python을 적어 파이썬을 실행한 다음</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5af82eae62627492985998" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style="margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important; height: auto;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important; height: 18px !important; line-height: 18px !important; margin-top: -18px; display: none; position: absolute; z-index: 2;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button crayon-pressed" title="줄 번호 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="일반 코드 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="줄 바꿈 토글"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="코드를 펼쳐서 보기" style="display: none;"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="복사"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="새 창에서 보기"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly="" style="tab-size: 4; font-size: 12px !important; line-height: 15px !important; z-index: 0; opacity: 0; overflow: hidden;">import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session()
+print(sess.run(hello))</textarea></div>
+			<div class="crayon-main" style="position: relative; z-index: 1; overflow: hidden;">
+				<table class="crayon-table" style="">
+					<tbody><tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5af82eae62627492985998-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82eae62627492985998-2">2</div><div class="crayon-num" data-line="crayon-5af82eae62627492985998-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5af82eae62627492985998-4">4</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5af82eae62627492985998-1"><span class="crayon-e">import </span><span class="crayon-e">tensorflow </span><span class="crayon-st">as</span><span class="crayon-h"> </span><span class="crayon-e">tf</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82eae62627492985998-2"><span class="crayon-v">hello</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">tf</span><span class="crayon-sy">.</span><span class="crayon-e">constant</span><span class="crayon-sy">(</span><span class="crayon-s">'Hello, TensorFlow!'</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5af82eae62627492985998-3"><span class="crayon-v">sess</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">tf</span><span class="crayon-sy">.</span><span class="crayon-e">Session</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5af82eae62627492985998-4"><span class="crayon-e">print</span><span class="crayon-sy">(</span><span class="crayon-v">sess</span><span class="crayon-sy">.</span><span class="crayon-e">run</span><span class="crayon-sy">(</span><span class="crayon-v">hello</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</tbody></table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p>를 입력하시면&nbsp;Hello, TensorFlow!가 출력됩니다.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>만약 오류가 발생한다면 오류 메시지를 구글링하여 원인을 찾아야 합니다. 그렇게 찾던 도중 자가 진단 코드를 찾게되었는데 유용하게 쓰여서 여기도 링크를 남기겠습니다.</p>
+<p><a href="https://gist.github.com/mrry/ee5dbcfdd045fa48a27d56664411d41c">https://gist.github.com/mrry/ee5dbcfdd045fa48a27d56664411d41c</a></p>
+<p>이전에 설치한 tensorflow환경에서 py 파일을 실행하시면 결과가 나타납니다.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="extra-hatom-entry-title"><span class="entry-title">Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU)</span></div>	</div>
+
+	<footer class="entry-meta-bar clearfix"><div class="entry-meta clearfix">
+			<span class="by-author author vcard"><a class="url fn n" href="http://www.lifebloom.biz/author/user/">kis0403</a></span>
+
+			<span class="date"><a href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/" title="11:19 오전" rel="bookmark"><time class="entry-date published" datetime="2017-07-31T11:19:05+00:00">7월 31, 2017</time><time class="updated" datetime="2017-08-27T15:25:47+00:00">8월 27, 2017</time></a></span>				<span class="category"><a href="http://www.lifebloom.biz/category/py/ins-py/" rel="category tag">installation</a></span>
+							<span class="comments"><a href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/#respond">댓글 없음</a></span>
+			<span class="edit-link"><a class="post-edit-link" href="http://www.lifebloom.biz/wp-admin/post.php?post=276&amp;action=edit">편집</a></span></div></footer>
+	</article>
+						<ul class="default-wp-page clearfix">
+			<li class="previous"><a href="http://www.lifebloom.biz/2017/07/30/recommendation-system-0-%ec%b6%94%ec%b2%9c-%ec%8b%9c%ec%8a%a4%ed%85%9c%ec%9d%b4%eb%9e%80/" rel="prev"><span class="meta-nav">←</span> Recommendation System 0. 추천 시스템이란?</a></li>
+			<li class="next"><a href="http://www.lifebloom.biz/2017/08/05/%ec%8a%a4%ed%8f%ac%ec%9d%bc%eb%9f%ac-%ec%a3%bc%ec%9d%98hbo-westworld%eb%a1%9c-%eb%b3%b8-%ea%b2%8c%ec%9e%84-%ec%82%b0%ec%97%85%ea%b3%bc-ai/" rel="next">(스포일러 주의)HBO Westworld로 본  AI의 미래 <span class="meta-nav">→</span></a></li>
+		</ul>
+	
+				
+<div id="comments" class="comments-area">
+
+	
+	
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">답글 남기기 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/#respond" style="display:none;">응답 취소</a></small></h3>			<form action="http://www.lifebloom.biz/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate="">
+				<p class="logged-in-as"><a href="http://www.lifebloom.biz/wp-admin/profile.php" aria-label="kis0403로(으로) 로그인함. 프로필 편집하기.">kis0403로(으로) 로그인 함</a>. <a href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;redirect_to=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F&amp;_wpnonce=1385134d9b">로그아웃?</a></p><p class="comment-form-comment"><label for="comment">댓글</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="댓글 달기"> <input type="hidden" name="comment_post_ID" value="276" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><input type="hidden" id="_wp_unfiltered_html_comment_disabled" name="_wp_unfiltered_html_comment" value="ec88e8f67a"><script>(function(){if(window===window.parent){document.getElementById('_wp_unfiltered_html_comment_disabled').name='_wp_unfiltered_html_comment';}})();</script>
+			</form>
+			</div><!-- #respond -->
+	
+</div><!-- #comments -->
+			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+	
+<div id="secondary">
+			
+		<aside id="search-2" class="widget widget_search"><h3 class="widget-title"><span>Search</span></h3><form action="http://www.lifebloom.biz/" class="search-form searchform clearfix" method="get">
+	<div class="search-wrap">
+		<input type="text" placeholder="검색" class="s field" name="s">
+		<button class="search-icon" type="submit"></button>
+	</div>
+</form><!-- .searchform --></aside>		<aside id="recent-posts-2" class="widget widget_recent_entries">		<h3 class="widget-title"><span>Recently posted</span></h3>		<ul>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/05/13/recommendation-system-1/">Recommendation System 1.</a>
+											<span class="post-date">5월 13, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/04/08/regression-with-machine-learning-3-regularization-for-spartsity%ed%9d%ac%ec%86%8c-%ed%95%99%ec%8a%b5/">Regression with Machine Learning 4. Regularization for spartsity(희소 학습)</a>
+											<span class="post-date">4월 8, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/03/27/%ea%b2%bd%ec%82%ac-%ed%95%98%ea%b0%95%eb%b2%95gradient-descent/">경사 하강법(Gradient Descent)</a>
+											<span class="post-date">3월 27, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/03/18/regression-with-machine-learning-3-constrained-least-squares%ec%a0%9c%ec%95%bd-%ec%b5%9c%ec%86%8c%ec%a0%9c%ea%b3%b1/">Regression with Machine Learning 3. Constrained Least Squares(제약 최소제곱)</a>
+											<span class="post-date">3월 18, 2018</span>
+									</li>
+											<li>
+					<a href="http://www.lifebloom.biz/2018/03/18/regression-with-machine-learning-1-stochastic-gradient-descent%ed%99%95%eb%a5%a0%ec%a0%81-%ea%b2%bd%ec%82%ac%eb%b2%95/">Regression with Machine Learning 2. Stochastic Gradient Descent(확률적 경사법)</a>
+											<span class="post-date">3월 18, 2018</span>
+									</li>
+					</ul>
+		</aside><aside id="archives-2" class="widget widget_archive"><h3 class="widget-title"><span>Posts</span></h3>		<ul>
+			<li><a href="http://www.lifebloom.biz/2018/05/">2018년 5월</a>&nbsp;(1)</li>
+	<li><a href="http://www.lifebloom.biz/2018/04/">2018년 4월</a>&nbsp;(1)</li>
+	<li><a href="http://www.lifebloom.biz/2018/03/">2018년 3월</a>&nbsp;(5)</li>
+	<li><a href="http://www.lifebloom.biz/2018/01/">2018년 1월</a>&nbsp;(1)</li>
+	<li><a href="http://www.lifebloom.biz/2017/09/">2017년 9월</a>&nbsp;(2)</li>
+	<li><a href="http://www.lifebloom.biz/2017/08/">2017년 8월</a>&nbsp;(6)</li>
+	<li><a href="http://www.lifebloom.biz/2017/07/">2017년 7월</a>&nbsp;(12)</li>
+	<li><a href="http://www.lifebloom.biz/2017/06/">2017년 6월</a>&nbsp;(7)</li>
+		</ul>
+		</aside><aside id="meta-2" class="widget widget_meta"><h3 class="widget-title"><span>Etc</span></h3>			<ul>
+			<li><a rel="nofollow" href="http://www.lifebloom.biz/wp-admin/">사이트 관리</a></li>			<li><a rel="nofollow" href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;_wpnonce=1385134d9b">로그아웃</a></li>
+			<li><a href="http://www.lifebloom.biz/feed/">글 <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://www.lifebloom.biz/comments/feed/">댓글 <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://wordpress.org/" title="이 블로그는 가장 앞선 개인 발행 도구인 워드프레스로 운영됩니다.">WordPress.org</a></li>			</ul>
+			</aside><aside id="categories-3" class="widget widget_categories"><h3 class="widget-title"><span>category</span></h3>		<ul>
+	<li class="cat-item cat-item-20"><a href="http://www.lifebloom.biz/category/misc/">misc</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="http://www.lifebloom.biz/category/py/">Python</a> (17)
+<ul class="children">
+	<li class="cat-item cat-item-29"><a href="http://www.lifebloom.biz/category/py/wrg/">coding with python</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="http://www.lifebloom.biz/category/py/ins-py/">installation</a> (5)
+</li>
+	<li class="cat-item cat-item-26"><a href="http://www.lifebloom.biz/category/py/nn/">Neural Network</a> (1)
+</li>
+	<li class="cat-item cat-item-18"><a href="http://www.lifebloom.biz/category/py/tm/">Text Mining</a> (10)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://www.lifebloom.biz/category/r/">R</a> (14)
+<ul class="children">
+	<li class="cat-item cat-item-27"><a href="http://www.lifebloom.biz/category/r/2017-weather-contest/">2017 Weather Contest</a> (4)
+</li>
+	<li class="cat-item cat-item-28"><a href="http://www.lifebloom.biz/category/r/ml/">machine learning</a> (5)
+</li>
+	<li class="cat-item cat-item-25"><a href="http://www.lifebloom.biz/category/r/pb/">Packages &amp; Base</a> (2)
+</li>
+	<li class="cat-item cat-item-23"><a href="http://www.lifebloom.biz/category/r/recom/">Recommendation System</a> (2)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-22"><a href="http://www.lifebloom.biz/category/visualization/">Visualization</a> (2)
+</li>
+		</ul>
+</aside>	</div>
+	
+
+        </div><!-- .inner-wrap -->
+    </div><!-- #main -->
+    
+        <footer id="colophon" class="clearfix ">
+                <div class="footer-socket-wrapper clearfix">
+            <div class="inner-wrap">
+                <div class="footer-socket-area">
+                    <div class="copyright">Copyright © 2018 <a href="http://www.lifebloom.biz/" title="Lifebloom"><span>Lifebloom</span></a>. Powered by <a href="https://wordpress.org/" target="_blank" title="워드프레스"><span>워드프레스</span></a>. 테마: Spacious(<a href="https://themegrill.com/themes/spacious" target="_blank" title="ThemeGrill" rel="designer"><span>ThemeGrill</span></a> 제작).</div>                    <nav class="small-menu clearfix">
+                                            </nav>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <a href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/#masthead" id="scroll-up" style="display: none;"></a>
+</div><!-- #page -->
+<script type="text/javascript">function ctSetCookie(c_name,value,def_value){document.cookie=c_name+'='+escape(value)+'; path=/';}ctSetCookie('ct_checkjs','421807227','0');</script><script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/admin-bar.min.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/apbct-public.js.다운로드"></script>
+<script type="text/javascript">//<![CDATA[
+var ctNocache={"ajaxurl":"http:\/\/www.lifebloom.biz\/wp-admin\/admin-ajax.php","info_flag":"","set_cookies_flag":"1","blog_home":"http:\/\/www.lifebloom.biz\/"};
+//]]></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/cleantalk_nocache.js.다운로드"></script>
+<script type="text/javascript">//<![CDATA[
+var ctPublic={"ct_ajax_nonce":"688d7fc4c6","ajaxurl":"http:\/\/www.lifebloom.biz\/wp-admin\/admin-ajax.php","ct_feedback_error":"Error occured while sending feedback.","ct_feedback_no_hash":"Feedback wasn't sent. There is no associated request.","ct_feedback_msg":"Feedback has been sent to CleanTalk Dashboard."};
+//]]></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/cleantalk-public-admin.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/comment-reply.min.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/navigation.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/wp-embed.min.js.다운로드"></script>
+<script type="text/javascript" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/MathJax.js.다운로드"></script>
+	<!--[if lte IE 8]>
+		<script type="text/javascript">
+			document.body.className = document.body.className.replace( /(^|\s)(no-)?customize-support(?=\s|$)/, '' ) + ' no-customize-support';
+		</script>
+	<![endif]-->
+	<!--[if gte IE 9]><!-->
+		<script type="text/javascript">(function(){var request,b=document.body,c='className',cs='customize-support',rcs=new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');request=true;b[c]=b[c].replace(rcs,' ');b[c]+=(window.postMessage&&request?' ':' no-')+cs;}());</script>
+	<!--<![endif]-->
+			<div id="wpadminbar" class="">
+							<a class="screen-reader-shortcut" href="http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/#wp-toolbar" tabindex="1">툴바로 바로가기</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="툴바" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/about.php"><span class="ab-icon"></span><span class="screen-reader-text">워드프레스 소개</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
+		<li id="wp-admin-bar-about"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/about.php">워드프레스 소개</a>		</li></ul><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/">문서</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="https://wordpress.org/support/">지원 포럼</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="https://wordpress.org/support/forum/requests-and-feedback">피드백</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-site-name" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/">Lifebloom</a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-site-name-default" class="ab-submenu">
+		<li id="wp-admin-bar-dashboard"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/">알림판</a>		</li></ul><ul id="wp-admin-bar-appearance" class="ab-submenu">
+		<li id="wp-admin-bar-themes"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/themes.php">테마</a>		</li>
+		<li id="wp-admin-bar-widgets"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/widgets.php">위젯</a>		</li>
+		<li id="wp-admin-bar-menus"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/nav-menus.php">메뉴</a>		</li>
+		<li id="wp-admin-bar-background" class="hide-if-customize"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/themes.php?page=custom-background">배경</a>		</li>
+		<li id="wp-admin-bar-header" class="hide-if-customize"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/themes.php?page=custom-header">헤더</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-customize" class="hide-if-no-customize"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/customize.php?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F">사용자 정의하기</a>		</li>
+		<li id="wp-admin-bar-updates"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/update-core.php" title="5 플러그인 업데이트, 1 테마 업데이트"><span class="ab-icon"></span><span class="ab-label">6</span><span class="screen-reader-text">5 플러그인 업데이트, 1 테마 업데이트</span></a>		</li>
+		<li id="wp-admin-bar-comments"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/edit-comments.php"><span class="ab-icon"></span><span class="ab-label awaiting-mod pending-count count-13" aria-hidden="true">13</span><span class="screen-reader-text">13 댓글이 검토를 기다리고 있습니다.</span></a>		</li>
+		<li id="wp-admin-bar-new-content" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/post-new.php"><span class="ab-icon"></span><span class="ab-label">새로 추가</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-new-content-default" class="ab-submenu">
+		<li id="wp-admin-bar-new-post"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/post-new.php">글</a>		</li>
+		<li id="wp-admin-bar-new-media"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/media-new.php">미디어</a>		</li>
+		<li id="wp-admin-bar-new-page"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/post-new.php?post_type=page">페이지</a>		</li>
+		<li id="wp-admin-bar-new-user"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/user-new.php">사용자</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-edit"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/post.php?post=276&amp;action=edit">이 글 편집</a>		</li>
+		<li id="wp-admin-bar-wpseo-menu" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_dashboard"><div id="yoast-ab-icon" class="ab-item yoast-logo svg"><span class="screen-reader-text">SEO</span></div><div class="wpseo-score-icon adminbar-seo-score ok"><span class="adminbar-seo-score-text screen-reader-text"></span></div></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-menu-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-configuration-wizard"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_configurator">Configuration Wizard</a>		</li>
+		<li id="wp-admin-bar-wpseo-kwresearch" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true">Keyword Research</div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-kwresearch-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-adwordsexternal"><a class="ab-item" href="https://adwords.google.com/keywordplanner" target="_blank">AdWords External</a>		</li>
+		<li id="wp-admin-bar-wpseo-googleinsights"><a class="ab-item" href="https://www.google.com/trends/explore#q=python+GPU" target="_blank">Google Trends</a>		</li>
+		<li id="wp-admin-bar-wpseo-wordtracker"><a class="ab-item" href="http://tools.seobook.com/keyword-tools/seobook/?keyword=python+GPU" target="_blank">SEO Book</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-wpseo-analysis" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true">Analyze this page</div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-analysis-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-inlinks-ose"><a class="ab-item" href="http://moz.com/researchtools/ose/links?site=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Check Inlinks (OSE)</a>		</li>
+		<li id="wp-admin-bar-wpseo-kwdensity"><a class="ab-item" href="http://www.zippy.co.uk/keyworddensity/index.php?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F&amp;keyword=python+GPU" target="_blank">Check Keyword Density</a>		</li>
+		<li id="wp-admin-bar-wpseo-cache"><a class="ab-item" href="http://webcache.googleusercontent.com/search?strip=1&amp;q=cache:http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Check Google Cache</a>		</li>
+		<li id="wp-admin-bar-wpseo-header"><a class="ab-item" href="http://quixapp.com/headers/?r=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Check Headers</a>		</li>
+		<li id="wp-admin-bar-wpseo-structureddata"><a class="ab-item" href="https://search.google.com/structured-data/testing-tool#url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Google Structured Data Test</a>		</li>
+		<li id="wp-admin-bar-wpseo-facebookdebug"><a class="ab-item" href="http://developers.facebook.com/tools/debug/og/object?q=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Facebook Debugger</a>		</li>
+		<li id="wp-admin-bar-wpseo-pinterestvalidator"><a class="ab-item" href="https://developers.pinterest.com/tools/url-debugger/?link=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Pinterest Rich Pins Validator</a>		</li>
+		<li id="wp-admin-bar-wpseo-htmlvalidation"><a class="ab-item" href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">HTML Validator</a>		</li>
+		<li id="wp-admin-bar-wpseo-cssvalidation"><a class="ab-item" href="http://jigsaw.w3.org/css-validator/validator?uri=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">CSS Validator</a>		</li>
+		<li id="wp-admin-bar-wpseo-pagespeed"><a class="ab-item" href="http://developers.google.com/speed/pagespeed/insights/?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Google Page Speed Test</a>		</li>
+		<li id="wp-admin-bar-wpseo-google-mobile-friendly"><a class="ab-item" href="https://www.google.com/webmasters/tools/mobile-friendly/?url=http%3A%2F%2Fwww.lifebloom.biz%2F2017%2F07%2F31%2Fmachine-learning%25ec%259d%2584-%25ec%259c%2584%25ed%2595%259c-tensorflow-%25ed%2599%2598%25ea%25b2%25bd-%25ec%2584%25a4%25ec%25b9%2598-windowsgpu%2F" target="_blank">Mobile-Friendly Test</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-wpseo-settings" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true">SEO Settings</div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wpseo-settings-default" class="ab-submenu">
+		<li id="wp-admin-bar-wpseo-general"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_dashboard">Dashboard</a>		</li>
+		<li id="wp-admin-bar-wpseo-titles"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_titles">Search Appearance</a>		</li>
+		<li id="wp-admin-bar-wpseo-search-console"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_search_console">Search Console</a>		</li>
+		<li id="wp-admin-bar-wpseo-social"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_social">Social</a>		</li>
+		<li id="wp-admin-bar-wpseo-tools"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_tools">Tools</a>		</li>
+		<li id="wp-admin-bar-wpseo-licenses"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/admin.php?page=wpseo_licenses">Premium</a>		</li></ul></div>		</li></ul></div>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://www.lifebloom.biz/" method="get" id="adminbarsearch"><input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150"><label for="adminbar-search" class="screen-reader-text">검색</label><input type="submit" class="adminbar-button" value="검색"></form></div>		</li>
+		<li id="wp-admin-bar-my-account" class="menupop with-avatar"><a class="ab-item" aria-haspopup="true" href="http://www.lifebloom.biz/wp-admin/profile.php">안녕하세요. <span class="display-name">kis0403</span>님<script pagespeed_no_defer="">//<![CDATA[
+(function(){var g=this,h=function(b,d){var a=b.split("."),c=g;a[0]in c||!c.execScript||c.execScript("var "+a[0]);for(var e;a.length&&(e=a.shift());)a.length||void 0===d?c[e]?c=c[e]:c=c[e]={}:c[e]=d};var l=function(b){var d=b.length;if(0<d){for(var a=Array(d),c=0;c<d;c++)a[c]=b[c];return a}return[]};var m=function(b){var d=window;if(d.addEventListener)d.addEventListener("load",b,!1);else if(d.attachEvent)d.attachEvent("onload",b);else{var a=d.onload;d.onload=function(){b.call(this);a&&a.call(this)}}};var n,p=function(b,d,a,c,e){this.f=b;this.h=d;this.i=a;this.c=e;this.e={height:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,width:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth};this.g=c;this.b={};this.a=[];this.d={}},q=function(b,d){var a,c,e=d.getAttribute("pagespeed_url_hash");if(a=e&&!(e in b.d))if(0>=d.offsetWidth&&0>=d.offsetHeight)a=!1;else{c=d.getBoundingClientRect();var f=document.body;a=c.top+("pageYOffset"in window?window.pageYOffset:(document.documentElement||f.parentNode||f).scrollTop);c=c.left+("pageXOffset"in window?window.pageXOffset:(document.documentElement||f.parentNode||f).scrollLeft);f=a.toString()+","+c;b.b.hasOwnProperty(f)?a=!1:(b.b[f]=!0,a=a<=b.e.height&&c<=b.e.width)}a&&(b.a.push(e),b.d[e]=!0)};p.prototype.checkImageForCriticality=function(b){b.getBoundingClientRect&&q(this,b)};h("pagespeed.CriticalImages.checkImageForCriticality",function(b){n.checkImageForCriticality(b)});h("pagespeed.CriticalImages.checkCriticalImages",function(){r(n)});var r=function(b){b.b={};for(var d=["IMG","INPUT"],a=[],c=0;c<d.length;++c)a=a.concat(l(document.getElementsByTagName(d[c])));if(0!=a.length&&a[0].getBoundingClientRect){for(c=0;d=a[c];++c)q(b,d);a="oh="+b.i;b.c&&(a+="&n="+b.c);if(d=0!=b.a.length)for(a+="&ci="+encodeURIComponent(b.a[0]),c=1;c<b.a.length;++c){var e=","+encodeURIComponent(b.a[c]);131072>=a.length+e.length&&(a+=e)}b.g&&(e="&rd="+encodeURIComponent(JSON.stringify(s())),131072>=a.length+e.length&&(a+=e),d=!0);t=a;if(d){c=b.f;b=b.h;var f;if(window.XMLHttpRequest)f=new XMLHttpRequest;else if(window.ActiveXObject)try{f=new ActiveXObject("Msxml2.XMLHTTP")}catch(k){try{f=new ActiveXObject("Microsoft.XMLHTTP")}catch(u){}}f&&(f.open("POST",c+(-1==c.indexOf("?")?"?":"&")+"url="+encodeURIComponent(b)),f.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),f.send(a))}}},s=function(){var b={},d=document.getElementsByTagName("IMG");if(0==d.length)return{};var a=d[0];if(!("naturalWidth"in a&&"naturalHeight"in a))return{};for(var c=0;a=d[c];++c){var e=a.getAttribute("pagespeed_url_hash");e&&(!(e in b)&&0<a.width&&0<a.height&&0<a.naturalWidth&&0<a.naturalHeight||e in b&&a.width>=b[e].k&&a.height>=b[e].j)&&(b[e]={rw:a.width,rh:a.height,ow:a.naturalWidth,oh:a.naturalHeight})}return b},t="";h("pagespeed.CriticalImages.getBeaconData",function(){return t});h("pagespeed.CriticalImages.Run",function(b,d,a,c,e,f){var k=new p(b,d,a,e,f);n=k;c&&m(function(){window.setTimeout(function(){r(k)},0)})});})();pagespeed.CriticalImages.Run('/mod_pagespeed_beacon','http://www.lifebloom.biz/2017/07/31/machine-learning%ec%9d%84-%ec%9c%84%ed%95%9c-tensorflow-%ed%99%98%ea%b2%bd-%ec%84%a4%ec%b9%98-windowsgpu/','YddRYU7ik1',true,false,'ZJQMd4HW7PQ');
+//]]></script><img alt="" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/b58996c504c5638798eb6b511e6f49af.png" srcset="http://2.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af?s=52&amp;d=mm&amp;r=g 2x" class="avatar avatar-26 photo" height="26" width="26" pagespeed_url_hash="1456192687" onload="pagespeed.CriticalImages.checkImageForCriticality(this);"></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-user-actions" class="ab-submenu">
+		<li id="wp-admin-bar-user-info"><a class="ab-item" tabindex="-1" href="http://www.lifebloom.biz/wp-admin/profile.php"><img alt="" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/b58996c504c5638798eb6b511e6f49af(1).png" srcset="http://2.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64" pagespeed_url_hash="1248907405" onload="pagespeed.CriticalImages.checkImageForCriticality(this);"><span class="display-name">kis0403</span><span class="username">user</span></a>		</li>
+		<li id="wp-admin-bar-edit-profile"><a class="ab-item" href="http://www.lifebloom.biz/wp-admin/profile.php">내 프로필 편집</a>		</li>
+		<li id="wp-admin-bar-logout"><a class="ab-item" href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;_wpnonce=1385134d9b">로그아웃</a>		</li></ul></div>		</li></ul>			</div>
+						<a class="screen-reader-shortcut" href="http://www.lifebloom.biz/wp-login.php?action=logout&amp;_wpnonce=1385134d9b">로그아웃</a>
+					</div>
+
+		  <div id="bitnami-banner" data-banner-id="4db78">  <style>#bitnami-banner{z-index:100000;height:80px;padding:0px;width:120px;background:transparent;position:fixed;right:0px;bottom:0px;border:0px solid #ededed}#bitnami-banner .bitnami-corner-image-div{position:fixed;right:0px;bottom:0px;border:0px;z-index:100001;height:110px}#bitnami-banner .bitnami-corner-image-div .bitnami-corner-image{position:fixed;right:0px;bottom:0px;border:0px;z-index:100001;height:110px}#bitnami-close-banner-button{height:12px;width:12px;z-index:10000000000;position:fixed;right:5px;bottom:65px;display:none;cursor:pointer}</style>  <img id="bitnami-close-banner-button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIMAAACECAMAAACERmjsAAABOFBMVEUAAAAqKiosLCwtLS0uLi4wMDAzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6OjpDQ0NJSUlKSkpMTExQUFBRUVFTU1NZWVlaWlpeXl5lZWVmZmZqamptbW1vb293d3d5eXl6enp8fHx+fn5/f3+AgICBgYGDg4OFhYWGhoaHh4eNjY2Pj4+YmJicnJydnZ2fn5+jo6OkpKSnp6erq6utra2xsbGzs7O0tLS1tbW7u7u+vr7AwMDFxcXHx8fIyMjJycnOzs7Pz8/R0dHZ2dne3t7h4eHj4+Pn5+fp6ent7e3v7+/w8PDx8fHy8vLz8/P09PT29vb39/f4+Pj5+fn6+vr8/Pz+/v7///8mJiYlJSUkJCQjIyMiIiIRERESEhITExMUFBQVFRUXFxcYGBgbGxscHBweHh4fHx8gICCmjOJJAAAAXHRSTlMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzVXeZu6CVAwYAAAQGSURBVHjaxdvZVtRAEAbg0nHBFVBERds94q7gvm/DiCKgIAVq4wbi+7+BF0MmSaf3qnTqcjj5z3e4mNP1dwawPivXd0oppZR/T8wixyye+d4PXLu0pPkz1D/qjsrBrD5kILzYWwQeeu1jmN6U5ZlYphIu/yjn/brmNtyWyowTEUINzFyGGoGKEPXAzG7QEGgIoQvMbAYtgYIQ+sDMbDAQ4hHCFJiZDEZCLEKYAzO9wUKIQwhbYKYzWAkxCGEPzOoGByEcIVyBmWpwEkIRwh2YVQ0ehDCE8AnMygYvQghC+AVmhcGT4I8QvoFZbvAm+CKEf2DWN0xJyYsQIYGTiIBv/kheRBBByscIXw6HPeJEBBLkzjm4KiUrQgTnTcBvyYoIJ0gJEc9YEDGEOIMREUWINBgQcYRYgxYRSYg2aBCxhHhDDRFNIBgURDxBwh4eBIGwBc/WORAEgpwCPCfpCAphHAE/7ScjKIRv7xAQux0igkLYetk/R9EQS1RC/zxJQuyiErbP1SQElZDvF60gtgmDPasFRE4o9s3kiAGhtHcnRhSEcv+QFFEiVHqYhIgyodpHJUNUCEovlwhRJaj9ZBKEQqj1tAkQKqHeVzeOqBE0vX3DiDpBe3/RSUvQGZpE6AhaQ3MILUFvaAqhJxgMzSAMBJOhCYSJYDTwI4wEs4EbYSZYDLwIC8Fm4ETYCFYDH8JKsBu4EHaCw8CDcBBcBg6Ei+A00BFOgttARbgJHgbsblAMz5HDIEj/B49LF2iY4IOApgkeCGic4EZA8wQnAhIQXAhIQXAgIAnBjoA0BCsCEhFsCEhFsCAgGcGMgHQEIwISEkwISEkwICApQY+AtAQtAhITdAhITdAgIDmhjoD0hBoCWiCoCGiDoCCgFUIVAe0QKghoiVBGQFuEEgJaIxQIaI8wQECLhBwBVMLWPeqrCwhIfn+B/P4EIF6gtiwkxHFEwCf0ooeEuIUw1yETaIjNLpxiqbsoiFFgIdAQwEMgIYCJQEEAF4GAADZCPAL4CNEIYCTEIoCTEImAEU5CFGI3vN3gJEQg1p8C3mAlhCPOIuDKGCshFHFwEQFxYYSVEIYY6vXPUf4IL0IIYqiXnyd9EZ4Ef8RQrzhX+yG8Cb6IPiHfL3wQAQQ/xDZhsGe5EUEEH0ROKPZNFyKQ4EYMCKW9e2GYleBCFIRy/2BDRBDsiBKh0sOYEVEEG6JMqPZRJkQkwYyoEJRebn6YlWBCVAlqP6lDEAh6hEKo9bR1BImgQ6iEel89r3xP/KMRELvKjwL29dy9/fLkz9ITR2aQOu9PlgmnP3rdobw6kD+wcXMFGeb+Wh6445HmCkV7l/T5wZVjna0RcWcGeWZ2+vzRr6tjF+9+0BH+A2TGXdGEY/ycAAAAAElFTkSuQmCC" pagespeed_url_hash="1436111899" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">  <div class="bitnami-corner-image-div">     <a href="http://www.lifebloom.biz/bitnami/index.html" target="_blank">       <img class="bitnami-corner-image" alt="Bitnami" src="./Machine Learning을 위한 Tensorflow 환경 설치 (windows,GPU) - Lifebloom_files/xcorner-logo.png.pagespeed.ic.6TukXqDtLV.png" pagespeed_url_hash="23950338" onload="pagespeed.CriticalImages.checkImageForCriticality(this);">     </a>  </div>  <script type="text/javascript">//<![CDATA[
+(function(){var banner=document.getElementById("bitnami-banner");var closeButton=document.getElementById("bitnami-close-banner-button");var toggleCloseButton=function toggleCloseButton(open){if(closeButton){if(open&&banner&&banner.style.display!="none"){closeButton.style.display="block";}else{closeButton.style.display="none";}}
+return false;};var setCookie=function setCookie(cname,cvalue,exdays){var d=new Date();d.setTime(d.getTime()+(exdays*24*60*60*1000));var expires="expires="+d.toUTCString();document.cookie=cname+"="+cvalue+"; "+expires;};var closeBanner=function closeBanner(open){if(banner){var suffix=banner.getAttribute('data-banner-id')||'global';banner.style.display="none";setCookie('_bitnami_closed_banner_'+suffix,"1",30);}
+return false;};banner.onmouseover=function(){return toggleCloseButton(1);};banner.onmouseout=function(){return toggleCloseButton(0);};closeButton.onclick=closeBanner;}());
+//]]></script> </div>   
+
+</body></html>
